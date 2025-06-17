@@ -14,7 +14,7 @@
             <input type="text" id="username" placeholder="Enter your intra username" aria-label="Intra username">
             <input type="password" id="password" placeholder="Password" aria-label="password">
             <button id="loginBtn"> Login</button>
-            <p id="errorMessage" class="error-message"></p>
+            <p id="errorMessage" class="error-message">Error</p>
         </div>
     </div>
 
@@ -24,6 +24,7 @@
             <button id="logoutBtn" class="logout-btn">Logout</button>
             <h1 id="welcomeMessage"> Welcome User!</h1>
 
+            <div class="profile-grid">
             <section class="profile-section">
                 <h2>Basic Info</h2>
                 <p><strong>ID:</strong> <span id="userId"></span></p>
@@ -38,17 +39,21 @@
                 <p><strong>Latest Grade:</strong> <span id="latestGrade">Loading...</span></p>
                 <p><strong>Audit Ratio:</strong> <span id="auditRatio">Loading...</span></p>
             </section>
+            </div>
 
             <section class="profile-section">
                 <h2>Progress</h2>
-                <div class="graph-container">
-                    <h3>XP Progress Over Time</h3>
-                    <svg id="xpGraph" width="100%" height="250" viewBox="0 0 600 250" preserveAspectRatio="xMidYMid meet"></svg>
-                </div>
+                <div class="profile-grid">
+                
+                    <div class="graph-container">
+                        <h3>XP Progress Over Time</h3>
+                        <svg id="xpGraph" width="100%" height="250" viewBox="0 0 600 250" preserveAspectRatio="xMidYMid meet"></svg>
+                    </div>
 
-                <div class="graph-container">
-                    <h3>Project Pass or Fail Ratio</h3>
-                    <svg id="xpGraph" width="100%" height="250" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid meet"></svg>
+                    <div class="graph-container">
+                        <h3>Project Pass or Fail Ratio</h3>
+                        <svg id="xpGraph" width="100%" height="250" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid meet"></svg>
+                    </div>
                 </div>
             </section>
         </div>
