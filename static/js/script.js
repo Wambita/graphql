@@ -1,4 +1,43 @@
 import { login, logout, isLoggedIn } from "./auth.js";
+import { fetchGraphQl } from "./query.js";
+
+async function loadProfile() {
+  try {
+    const data = await fetchGraphQl();
+    if (!data) {
+  console.error("❌ No data returned from fetchGraphQl()");
+  return;
+}
+    console.log("GraphQL data:", data);
+
+    const user = data.user?.[0];
+    const event = data.event?.[0];
+
+    console.log("👤 user:", user);
+    console.log("📅 event:", event);
+
+
+    if (!user) {
+      console.error("User data missing.");
+      return;
+    }
+
+
+    // Fill in the UI
+    document.getElementById("userId").textContent = user.id || "N/A";
+    document.getElementById("userLogin").textContent = user.login || "N/A";
+    document.getElementById("userEmail").textContent = user.email || "N/A";
+
+    document.getElementById("campusName").textContent = user.campus|| "N/A";
+    document.getElementById("campusCountry").textContent = user.attrs?.country || "N/A";
+
+    document.getElementById("moduleStart").textContent = event?.startAt?.split("T")[0] || "N/A";
+    document.getElementById("moduleEnd").textContent = event?.endAt?.split("T")[0] || "N/A";
+
+  } catch (err) {
+    console.error("Failed to load profile:", err);
+  }
+}
 
 //elements
 const loginPage = document.getElementById("loginPage");
@@ -27,6 +66,7 @@ loginBtn.addEventListener("click", async () => {
     try {
         await login(username, password);
         showProfile();
+        await loadProfile();
     } catch (e) {
         errorMessage.textContent = e.message;
     }
@@ -42,9 +82,10 @@ logoutBtn.addEventListener("click", () => {
 
 
 //when page loads
-window.addEventListener("DOMContentLoaded" , () => {
+window.addEventListener("DOMContentLoaded" , async() => {
     if (isLoggedIn()) {
         showProfile();
+        await loadProfile();
     } else {
         showLogin();
     }
