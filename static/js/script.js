@@ -24,6 +24,9 @@ async function loadProfile() {
 
 
     // Fill in the UI
+    const fullName = `${user.attrs?.firstName || ""} ${user.attrs?.middleName || ""} ${user.attrs?.lastName || ""}`.trim();
+    document.getElementById("welcomeMessage").textContent = `Welcome ${fullName || "User"}!`;
+
     document.getElementById("userId").textContent = user.id || "N/A";
     document.getElementById("userLogin").textContent = user.login || "N/A";
     document.getElementById("userEmail").textContent = user.email || "N/A";
