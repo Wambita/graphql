@@ -59,25 +59,30 @@ export const query = `
 `
 
 export async function fetchGraphQl() {
-    const token = getToken();
-     try {
-        const response = await fetch("https://learn.zone01kisumu.ke/api/graphql-engine/v1/graphql", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({ query })
-        });
+  const token = getToken();
 
-        const json = await response.json();
-        if (!response.ok || !json.errors) {
-            throw new Error("Failed to fetch data");
-        }
+  if (!token) {
+    console.error(" No JWT token found.");
+    return null;
+  }
 
-        return json.data;
-        } catch (err) {
-        console.error("GraphQL fetch error:", err);
-        throw err;
-     }
+  const response = await fetch("https://learn.zone01kisumu.ke/api/graphql-engine/v1/graphql", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ query }),
+  });
+
+  const result = await response.json();
+
+  console.log(" Full GraphQL Response:", result);
+
+  if (result.errors) {
+    console.error("GraphQL query failed or returned errors: ", result.errors);
+    return null;
+  }
+
+  return result.data;
 }
