@@ -1,41 +1,36 @@
-const SIGNIN_ENDPOINT =  "https://learn.zone01kisumu.ke/api/auth/signin";
+const SIGNIN_URL = "https://learn.zone01kisumu.ke/api/auth/signin";
 
-//Encode  credentials for BasicAuth
-export function encodeCredentials(username, password) {
-    return btoa(`${username}:${password}`);
-}
-
-//login and  store  jwt
 export async function login(username, password) {
-    const basicAuth = encodeCredentials(username, password);
-    const response = await fetch(SIGNIN_ENDPOINT, {
-        method : "POST",
-        headers: {
-            Authorization: `Basic ${basicAuth}`,
-            "Content-Type": "application/json"
-        }
-    });
+  const credentials = btoa(`${username}:${password}`); // Encode username:password
+  const res = await fetch(SIGNIN_URL, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${credentials}`,
+    },
+  });
 
-    if (!response.ok) {
-        throw new Error(error.message||"Invalid Credentials");
-    }
+  if (!res.ok) {
+    throw new Error("Invalid username or password");
+  }
 
-    const token = await response.text(); // raw jwt
-    localStorage.setItem("jwt", token);
-    return token;
+
+ const raw = await res.text();
+const token = raw.replace(/^"|"$/g, ""); 
+localStorage.setItem("jwt", token);
+  if (!token) {
+    throw new Error("Login successful, but no token returned.");
+  }
+
 }
 
-//get stored  token
 export function getToken() {
-    return localStorage.getItem("jwt");
+  return localStorage.getItem("jwt");
 }
 
-//check if  user is  logged in
-export function isLoggedIn() {
-    return !!getToken();
-}
-
-//logout
 export function logout() {
-    localStorage.removeItem("jwt");
+  localStorage.removeItem("jwt");
+}
+
+export function isLoggedIn() {
+  return !!getToken();
 }
