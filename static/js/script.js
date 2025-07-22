@@ -1,7 +1,6 @@
 import { login, logout, isLoggedIn } from "./auth.js";
 import { fetchGraphQl } from "./query.js";
-let currentUser = null; // 🔁 Declare globally at the top of your file
-
+let currentUser = null; 
 async function loadProfile() {
   try {
     const data = await fetchGraphQl();
@@ -18,8 +17,7 @@ async function loadProfile() {
       return;
     }
 
-    currentUser = user; // ✅ Now we can use currentUser later safely
-
+    currentUser = user; 
     // Fill in UI basic info
     const fullName = `${user.attrs?.firstName || ""} ${user.attrs?.middleName || ""} ${user.attrs?.lastName || ""}`.trim();
     document.getElementById("welcomeMessage").textContent = `Welcome ${fullName || "User"}!`;
@@ -40,12 +38,10 @@ async function loadProfile() {
     const rankEl = document.getElementById("rank");
     const auditRatioEl = document.getElementById("auditRatio");
     const gradeEl = document.getElementById("latestGrade");
-
     // Total XP
-    const totalXP = currentUser.transactions?.reduce((sum, tx) => {
-      return tx.type === "xp" ? sum + tx.amount : sum;
-    }, 0) || 0;
-
+ const totalXP = user.transactions.reduce((totalXP, transaction) => {
+  return (transaction.type === "xp" && transaction.eventId === 75) ? totalXP + transaction.amount : totalXP;
+}, 0);
     const [xpValue, xpUnit] = formatXP(totalXP);
     xpEl.textContent = `${xpValue} ${xpUnit}`;
 
