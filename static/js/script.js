@@ -1,63 +1,88 @@
 import { login, logout, isLoggedIn } from "./auth.js";
 import { fetchGraphQl } from "./query.js";
+let currentUser = null; // 🔁 Declare globally at the top of your file
 
 async function loadProfile() {
   try {
     const data = await fetchGraphQl();
     if (!data) {
-  console.error(" No data returned from fetchGraphQl()");
-  return;
-}
-    console.log("GraphQL data:", data);
+      console.error("No data returned from fetchGraphQl()");
+      return;
+    }
 
     const user = data.user?.[0];
     const event = data.event?.[0];
-
-    console.log("user:", user);
-    console.log("event:", event);
-
 
     if (!user) {
       console.error("User data missing.");
       return;
     }
 
+    currentUser = user; // ✅ Now we can use currentUser later safely
 
-    // Fill in the UI
+    // Fill in UI basic info
     const fullName = `${user.attrs?.firstName || ""} ${user.attrs?.middleName || ""} ${user.attrs?.lastName || ""}`.trim();
     document.getElementById("welcomeMessage").textContent = `Welcome ${fullName || "User"}!`;
 
     document.getElementById("userId").textContent = user.id || "N/A";
     document.getElementById("userLogin").textContent = user.login || "N/A";
     document.getElementById("userEmail").textContent = user.email || "N/A";
-
-    document.getElementById("campusName").textContent = user.campus|| "N/A";
+    document.getElementById("campusName").textContent = user.campus || "N/A";
     document.getElementById("campusCountry").textContent = user.attrs?.country || "N/A";
-
     document.getElementById("moduleStart").textContent = event?.startAt?.split("T")[0] || "N/A";
     document.getElementById("moduleEnd").textContent = event?.endAt?.split("T")[0] || "N/A";
 
-  //Stats Section — 
-    const totalXp = user.transactions?.reduce((sum, tx) => sum + (tx.type === "xp" ? tx.amount : 0), 0) || 0;
-    document.getElementById("totalXp").textContent = totalXp.toLocaleString();
+    // ==== Stats Section ====
 
-    const latestGrade = user.progresses?.[0]?.grade ?? "N/A";
-    document.getElementById("latestGrade").textContent = latestGrade;
+    // Get DOM elements
+    const xpEl = document.getElementById("totalXp");
+    const levelEl = document.getElementById("level");
+    const rankEl = document.getElementById("rank");
+    const auditRatioEl = document.getElementById("auditRatio");
+    const gradeEl = document.getElementById("latestGrade");
 
-    document.getElementById("auditRatio").textContent = user.auditRatio?.toFixed(2) || "N/A";
+    // Total XP
+    const totalXP = currentUser.transactions?.reduce((sum, tx) => {
+      return tx.type === "xp" ? sum + tx.amount : sum;
+    }, 0) || 0;
 
-    const level = Math.floor(totalXp / 1000);
-    const rank = totalXp > 50000 ? "Pro" : totalXp > 20000 ? "Intermediate" : "Beginner";
+    const [xpValue, xpUnit] = formatXP(totalXP);
+    xpEl.textContent = `${xpValue} ${xpUnit}`;
 
-    document.getElementById("level").textContent = level;
-    document.getElementById("rank").textContent = rank;
+    // Grade
+    const latestGrade = currentUser.progresses?.[0]?.grade ?? "N/A";
+    gradeEl.textContent = typeof latestGrade === "number" ? latestGrade.toFixed(2) : "N/A";
 
+    // Level & Rank
+    const level = currentUser.events?.[0]?.level ?? 0;
+    levelEl.textContent = level;
+
+    const rankLevels = [
+      "Aspiring Developer", "Beginner Developer", "Apprentice Developer",
+      "Assistant Developer", "Basic Developer", "Junior Developer",
+      "Intermediate Developer", "Senior Developer", "Lead Developer", "Mentor Developer"
+    ];
+    const rankIndex = Math.floor(level / 10);
+    rankEl.textContent = rankLevels[rankIndex] || "Developer";
+
+    // Audit Ratio
+    const auditRatio = currentUser.auditRatio ?? null;
+    auditRatioEl.textContent = auditRatio !== null ? auditRatio.toFixed(2) : "N/A";
 
   } catch (err) {
     console.error("Failed to load profile:", err);
   }
 }
 
+function formatXP(bytes) {
+  if (bytes >= 1_000_000) {
+    return [(bytes / 1_000_000).toFixed(2), "MB"];
+  } else if (bytes >= 1_000) {
+    return [(bytes / 1_000).toFixed(2), "KB"];
+  } else {
+    return [bytes, "Bytes"];
+  }
+}
 //elements
 const loginPage = document.getElementById("loginPage");
 const profilePage = document.getElementById("profilePage");
