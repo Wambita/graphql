@@ -5,7 +5,7 @@ async function loadProfile() {
   try {
     const data = await fetchGraphQl();
     if (!data) {
-  console.error("❌ No data returned from fetchGraphQl()");
+  console.error(" No data returned from fetchGraphQl()");
   return;
 }
     console.log("GraphQL data:", data);
@@ -13,8 +13,8 @@ async function loadProfile() {
     const user = data.user?.[0];
     const event = data.event?.[0];
 
-    console.log("👤 user:", user);
-    console.log("📅 event:", event);
+    console.log("user:", user);
+    console.log("event:", event);
 
 
     if (!user) {
@@ -36,6 +36,22 @@ async function loadProfile() {
 
     document.getElementById("moduleStart").textContent = event?.startAt?.split("T")[0] || "N/A";
     document.getElementById("moduleEnd").textContent = event?.endAt?.split("T")[0] || "N/A";
+
+  //Stats Section — 
+    const totalXp = user.transactions?.reduce((sum, tx) => sum + (tx.type === "xp" ? tx.amount : 0), 0) || 0;
+    document.getElementById("totalXp").textContent = totalXp.toLocaleString();
+
+    const latestGrade = user.progresses?.[0]?.grade ?? "N/A";
+    document.getElementById("latestGrade").textContent = latestGrade;
+
+    document.getElementById("auditRatio").textContent = user.auditRatio?.toFixed(2) || "N/A";
+
+    const level = Math.floor(totalXp / 1000);
+    const rank = totalXp > 50000 ? "Pro" : totalXp > 20000 ? "Intermediate" : "Beginner";
+
+    document.getElementById("level").textContent = level;
+    document.getElementById("rank").textContent = rank;
+
 
   } catch (err) {
     console.error("Failed to load profile:", err);
@@ -93,3 +109,5 @@ window.addEventListener("DOMContentLoaded" , async() => {
         showLogin();
     }
 });
+
+
