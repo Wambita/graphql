@@ -1,5 +1,7 @@
 import { login, logout, isLoggedIn } from "./auth.js";
 import { fetchGraphQl } from "./query.js";
+import { getXPByDate, drawXPGraph} from './graph.js';
+
 let currentUser = null; 
 async function loadProfile() {
   try {
@@ -64,6 +66,11 @@ async function loadProfile() {
     // Audit Ratio
     const auditRatio = currentUser.auditRatio ?? null;
     auditRatioEl.textContent = auditRatio !== null ? auditRatio.toFixed(2) : "N/A";
+
+  
+ const xpData = getXPByDate(currentUser.transactions);
+drawXPGraph(xpData, "xpGraph");
+
 
   } catch (err) {
     console.error("Failed to load profile:", err);
