@@ -1,6 +1,6 @@
 import { login, logout, isLoggedIn } from "./auth.js";
 import { fetchGraphQl } from "./query.js";
-import { getXPByDate, drawXPGraph} from './graph.js';
+import { generateXPGraph, generatePassFailPie } from "./graph.js";
 
 let currentUser = null; 
 async function loadProfile() {
@@ -68,8 +68,8 @@ async function loadProfile() {
     auditRatioEl.textContent = auditRatio !== null ? auditRatio.toFixed(2) : "N/A";
 
   
- const xpData = getXPByDate(currentUser.transactions);
-drawXPGraph(xpData, "xpGraph");
+generateXPGraph(user.transactions, event.startAt, event.endAt);
+generatePassFailPie(user.progresses);
 
 
   } catch (err) {
