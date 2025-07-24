@@ -72,9 +72,8 @@ function createXPGraphSVG(dataPoints, startDate, endDate) {
         </circle>
       `;
     }).join("")}
-    <text x="400" y="40" text-anchor="middle" font-size="18" fill="#fff" font-family="Segoe UI">XP Progress Over Time</text>
     <text x="400" y="490" text-anchor="middle" font-size="14" fill="#ccc">Timeline</text>
-    <text x="-250" y="30" text-anchor="middle" transform="rotate(-90)" font-size="14" fill="#ccc">Cumulative XP</text>
+    <text x="-300" y="-100" text-anchor="middle" transform="rotate(-90)" font-size="14" fill="#ccc">Cumulative XP</text>
   </svg>
   `;
 }
@@ -109,14 +108,14 @@ export function generatePassFailPie(progresses, svgId = "passFailGraph") {
   };
 
   const pieSVG = `
-  <svg width="100%" height="250" viewBox="0 0 400 250">
+  <svg width="90%" height="250" viewBox="0 0 400 250">
     ${path(0, passAngle, "#6A1B9A")}
     ${path(passAngle, 2 * Math.PI, "#9C27B0")}
     <rect x="20" y="20" width="12" height="12" fill="#6A1B9A"/>
-    <text x="40" y="30" fill="#fff" font-size="14">Passed: ${passed}</text>
+    <text x="40" y="30" fill="#fff" font-size="8">Passed: ${passed}</text>
     <rect x="20" y="45" width="12" height="12" fill="#9C27B0"/>
-    <text x="40" y="55" fill="#fff" font-size="14">Failed: ${failed}</text>
-    <text x="200" y="240" text-anchor="middle" fill="#fff" font-size="16">Project Pass/Fail Ratio</text>
+    <text x="40" y="55" fill="#fff" font-size="8">Failed: ${failed}</text>
+    <text x="200" y="240" text-anchor="middle" fill="#fff" font-size="8">Project Pass/Fail Ratio</text>
   </svg>
   `;
 
