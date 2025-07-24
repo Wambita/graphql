@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GraphQl Profile</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 <body>
     <!--Login form-->
@@ -12,13 +14,10 @@
         <div class="card">
             <h1>Login</h1>
             <input type="text" id="username" placeholder="Enter your intra username" aria-label="Intra username">
-            <div class="password-container"> <input type="password" id="password" placeholder="Password" aria-label="Password">
-                <svg id="togglePasswordVisibility" class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path class="eye-open-path" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle class="eye-open-path" cx="12" cy="12" r="3"></circle>
-                    <path class="eye-closed-path hidden-path" d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.54 18.54 0 0 1 2.94-3.06M22 12s-4 8-11 8a18.54 18.54 0 0 1-2.94-3.06m-4.66-4.66A10.07 10.07 0 0 1 12 4c7 0 11 8 11 8m-1.29-3.41L12 12"></path>
-                </svg>
-            </div>
+        <div class="password-container">
+        <input type="password" id="password" placeholder="Password" aria-label="Password" />
+        <i id="togglePasswordVisibility" class="fa-solid fa-eye eye-icon"></i>
+        </div>
             <button id="login-button"> Login</button>
             <p id="errorMessage" class="error-message"></p>
         </div>
